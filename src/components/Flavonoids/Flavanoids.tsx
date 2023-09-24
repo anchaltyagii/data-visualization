@@ -4,13 +4,14 @@ const Flavanoids: React.FC<{ data: any }> = ({ data }) => {
   const [classStats, setClassStats] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
-    calculateStats();
+    calculateFlavanoids();
   }, []);
 
-  const calculateStats = () => {
+  // function for calculating flavanoids values
+  const calculateFlavanoids = () => {
     const stats: { [key: string]: any } = {};
 
-    data.forEach((item: any) => {
+    data?.forEach((item: any) => {
       let { Alcohol, Flavanoids } = item;
       Flavanoids = Number(0.0 + Flavanoids);
 

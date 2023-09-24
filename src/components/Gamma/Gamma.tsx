@@ -8,6 +8,7 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
     calculateGamma();
   }, []);
 
+  // function for calculating gamma values
   const calculateGamma = () => {
     const newData = data.map((item: any) => {
       const { Ash, Hue, Magnesium } = item;
@@ -111,12 +112,6 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {/* <tr>
-            <td>Gamma</td>
-            {Object.keys(classStats).map((alcoholClass) => (
-              <td key={alcoholClass}>{classStats[alcoholClass].mean.toFixed(2)}</td>
-            ))}
-          </tr> */}
           <tr>
             <td>
               <b>
