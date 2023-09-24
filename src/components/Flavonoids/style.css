@@ -1,0 +1,21 @@
+.table-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 500px;
+  border-spacing: 0px;
+  text-align: center;
+}
+
+th {
+  border: 1px solid #000;
+}
+
+td {
+  border: 1px solid #000;
+}

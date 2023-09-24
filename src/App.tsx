@@ -1,24 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Flavanoids from "./components/Flavonoids/Flavanoids";
+import { wine_data } from "./data/wine-data";
+import Gamma from "./components/Gamma/Gamma";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Flavanoids data={wine_data} />
+      <Gamma data={wine_data}/>
     </div>
   );
 }
