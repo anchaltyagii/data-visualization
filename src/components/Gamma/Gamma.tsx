@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { calculateMean, calculateMedian, calculateMode } from "../../utility";
 import "./style.css";
 
 const Gamma: React.FC<{ data: any }> = ({ data }) => {
@@ -13,101 +14,57 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
     const newData = data.map((item: any) => {
       const { Ash, Hue, Magnesium } = item;
       const gamma: number = (Ash * Hue) / Magnesium;
-      return { ...item, Gamma: gamma };
+      const gamma2 = gamma.toFixed(3);
+      return { ...item, Gamma: gamma2 };
     });
 
-    const stats: {
-      [key: string]: { mean: number; median: number; mode: number[] };
-    } = {};
+    const stats: { [key: string]: any } = {};
 
     newData.forEach((item: any) => {
-      const { Alcohol, Gamma } = item;
+      let { Alcohol, Gamma } = item;
+      Gamma = Number(0.0 + Gamma);
 
       if (!stats[Alcohol]) {
         stats[Alcohol] = {
-          mean: 0,
-          median: 0,
-          mode: [],
+          gammaList: [] as number[],
         };
       }
 
-      stats[Alcohol].mode.push(Gamma);
+      stats[Alcohol].gammaList.push(Gamma);
     });
 
     for (const alcoholClass in stats) {
       const classData = stats[alcoholClass];
-      const { mode } = classData;
+      const { gammaList } = classData;
 
       // Calculate mean, median, and mode for Gamma
-      const mean: number = calculateMean(mode);
-      const median: number = calculateMedian(mode);
-      const modeValues: number[] = calculateMode(mode);
+      const mean = calculateMean(gammaList);
+      const median = calculateMedian(gammaList);
+      const mode = calculateMode(gammaList);
 
+      // Round the values to three decimal places
       stats[alcoholClass] = {
-        mean,
-        median,
-        mode: modeValues,
+        mean: mean.toFixed(3),
+        median: median.toFixed(3),
+        mode: mode.map((value) => value.toFixed(3)),
       };
     }
 
     setClassStats(stats);
   };
 
-  const calculateMean = (arr: number[]): number => {
-    const sum: number = arr.reduce((total, val) => total + val, 0);
-    return sum / arr.length;
-  };
-
-  const calculateMedian = (arr: number[]): number => {
-    const sortedArr: number[] = [...arr].sort((a, b) => a - b);
-    const middleIndex: number = Math.floor(sortedArr.length / 2);
-    if (sortedArr.length % 2 === 0) {
-      return (sortedArr[middleIndex - 1] + sortedArr[middleIndex]) / 2;
-    } else {
-      return sortedArr[middleIndex];
-    }
-  };
-
-  const calculateMode = (arr: number[]): any => {
-    const countMap: { [key: number]: number } = {};
-    arr.forEach((value) => {
-      if (countMap[value]) {
-        countMap[value]++;
-      } else {
-        countMap[value] = 1;
-      }
-    });
-
-    let maxFrequency: number = 0;
-    const modeValues: number[] = [];
-
-    for (const value in countMap) {
-      const frequency: number = countMap[value];
-
-      if (frequency > maxFrequency) {
-        maxFrequency = frequency;
-        modeValues.length = 0;
-        modeValues.push(parseFloat(value));
-      } else if (frequency === maxFrequency) {
-        modeValues.push(parseFloat(value));
-      }
-    }
-    if (modeValues.length === arr.length) {
-      return null;
-    } else {
-      return modeValues;
-    }
-  };
-
   return (
     <div className="table-wrapper">
-      <h2>Gamma Statistics by class</h2>
+      <h2>Gamma Statistics by Class</h2>
       <table>
         <thead>
           <tr>
             <th>Measures</th>
             {Object.keys(classStats).map((alcoholClass) => (
-              <th key={alcoholClass}>{`Class ${alcoholClass}`}</th>
+              <th
+                key={alcoholClass}
+                style={{ width: "200px" }}
+              >{`Class ${alcoholClass}`}</th>
             ))}
           </tr>
         </thead>
@@ -119,9 +76,7 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
               </b>
             </td>
             {Object.keys(classStats).map((alcoholClass) => (
-              <td key={alcoholClass}>
-                {classStats[alcoholClass].mean.toFixed(3)}
-              </td>
+              <td key={alcoholClass}>{classStats[alcoholClass].mean}</td>
             ))}
           </tr>
           <tr>
@@ -131,9 +86,7 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
               </b>
             </td>
             {Object.keys(classStats).map((alcoholClass) => (
-              <td key={alcoholClass}>
-                {classStats[alcoholClass].median.toFixed(3)}
-              </td>
+              <td key={alcoholClass}>{classStats[alcoholClass].median}</td>
             ))}
           </tr>
           <tr>
@@ -144,11 +97,7 @@ const Gamma: React.FC<{ data: any }> = ({ data }) => {
             </td>
             {Object.keys(classStats).map((alcoholClass) => (
               <td key={alcoholClass}>
-                {classStats[alcoholClass].mode === null ? (
-                  <span>NA</span>
-                ) : (
-                  <span>{classStats[alcoholClass].mode.join(", ")}</span>
-                )}
+                {classStats[alcoholClass].mode.join(", ")}
               </td>
             ))}
           </tr>

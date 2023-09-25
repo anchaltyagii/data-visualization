@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { calculateMean, calculateMedian, calculateMode } from "../../utility";
+import "./style.css";
 
 const Flavanoids: React.FC<{ data: any }> = ({ data }) => {
   const [classStats, setClassStats] = useState<{ [key: string]: any }>({});
@@ -32,61 +34,22 @@ const Flavanoids: React.FC<{ data: any }> = ({ data }) => {
       const classData = stats[alcoholClass];
       const { count, totalFlavanoids, flavanoidsList } = classData;
 
-      const mean = totalFlavanoids / count;
-
-      const sortedFlavanoids = flavanoidsList
-        .filter((value: any) => !isNaN(value)) // Filter out non-numeric values
-        .sort((a: any, b: any) => a - b);
-      const middleIndex = Math.floor(count / 2);
-      const median =
-        count % 2 === 0
-          ? (sortedFlavanoids[middleIndex - 1] +
-              sortedFlavanoids[middleIndex]) /
-            2
-          : sortedFlavanoids[middleIndex];
-
+      // Calculate mean, median, and mode for Gamma
+      const mean = calculateMean(flavanoidsList);
+      const median = calculateMedian(flavanoidsList);
       const mode = calculateMode(
         flavanoidsList.filter((value: any) => !isNaN(value))
       );
 
+      // Round the values to three decimal places
       stats[alcoholClass] = {
-        mean,
-        median,
-        mode,
+        mean: mean.toFixed(3),
+        median: median.toFixed(3),
+        mode: mode.map((value) => value.toFixed(3)),
       };
     }
 
     setClassStats(stats);
-  };
-
-  const calculateMode = (arr: number[]) => {
-    const countMap: { [key: number]: number } = {};
-    arr.forEach((value) => {
-      if (!isNaN(value)) {
-        if (countMap[value]) {
-          countMap[value]++;
-        } else {
-          countMap[value] = 1;
-        }
-      }
-    });
-
-    let maxFrequency = 0;
-    const modeValues: number[] = [];
-
-    for (const value in countMap) {
-      const frequency = countMap[value];
-
-      if (frequency > maxFrequency) {
-        maxFrequency = frequency;
-        modeValues.length = 0;
-        modeValues.push(parseFloat(value));
-      } else if (frequency === maxFrequency) {
-        modeValues.push(parseFloat(value));
-      }
-    }
-
-    return modeValues;
   };
 
   return (
@@ -109,9 +72,7 @@ const Flavanoids: React.FC<{ data: any }> = ({ data }) => {
               </b>
             </td>
             {Object.keys(classStats).map((alcoholClass) => (
-              <td key={alcoholClass}>
-                {classStats[alcoholClass].mean.toFixed(2)}
-              </td>
+              <td key={alcoholClass}>{classStats[alcoholClass].mean}</td>
             ))}
           </tr>
           <tr>
@@ -121,9 +82,7 @@ const Flavanoids: React.FC<{ data: any }> = ({ data }) => {
               </b>
             </td>
             {Object.keys(classStats).map((alcoholClass) => (
-              <td key={alcoholClass}>
-                {classStats[alcoholClass].median.toFixed(2)}
-              </td>
+              <td key={alcoholClass}>{classStats[alcoholClass].median}</td>
             ))}
           </tr>
           <tr>

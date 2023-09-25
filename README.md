@@ -10,10 +10,10 @@
 Open http://localhost:3000 to view the project.
 
 # Screenshots for Flavanoids Table
-![Alt text](image.png)
+![Alt text](image-3.png)
 
 # Screenshot for Gamma Table
-![Alt text](image-1.png)
+![Alt text](image.png)
 
 # Screenshot for application
-![Alt text](image-2.png)
+![Alt text](image-6.png)
